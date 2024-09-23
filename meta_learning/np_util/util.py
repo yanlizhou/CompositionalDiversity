@@ -2,9 +2,9 @@ import math
 import numpy as np
 from scipy.spatial.distance import jaccard
 
-from ...utility.render import get_lines
-from ...utility.render_util import shapes_in_exp
-from ...utility2.render import make_binary_image
+from ...bayes_utility.render import get_lines
+from ...bayes_utility.render_util import shapes_in_exp
+from ...gns_utility.render import make_binary_image
 
 __all__ = [
     'dictionary', 'rotate_matrix', 'recenter',

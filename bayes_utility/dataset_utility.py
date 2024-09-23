@@ -1,14 +1,11 @@
 # import os
 import numpy as np
 import pickle
-
 import torch
-from torch.utils.data import Dataset, DataLoader
-# from torchvision import transforms, utils
+from torch.utils.data import Dataset
 
-# from .grammar import *
 from .render import primitives, render_from_string
-# from .hypothesis import ShapeHypothesis
+
 
 def get_probs(neg_set):
     l3s = sum(list(map(lambda x: len(x.split('+')[0])==5, neg_set)))
@@ -57,10 +54,6 @@ class dataset(Dataset):
 
         question_set = np.random.choice(list(h_set),self.n_support)
 
-        # positive = np.random.choice(list(h_set), 1)
-        # negative_set = list(self.all_tokens.difference(h_set))
-        # negatives = np.random.choice(negative_set, self.n_choice-1, p=get_probs(negative_set))
-        # answer_set = np.concatenate((positive,negatives))
         positive = np.random.choice(list(h_set), self.n_pos)
         negative_set = list(self.all_tokens.difference(h_set))
         negatives = np.random.choice(negative_set, self.n_neg, p=get_probs(negative_set))

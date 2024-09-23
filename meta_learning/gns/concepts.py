@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 import numpy as np
 import torch
 
-from ...utility2.render import prim_color, render_from_string
+from ...gns_utility.render import prim_color, render_from_string
 from ..concepts import Concept as _Concept
 from ..concepts import MetaConcept as _MetaConcept
 from .fit_angle import fit_angle

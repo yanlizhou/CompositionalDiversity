@@ -14,24 +14,23 @@ from LOTlib3.Eval import TooBigException
 from LOTlib3.FunctionNode import BVUseFunctionNode
 from LOTlib3.DataAndObjects import FunctionData
 
-from ..utility.render import all_possible_shapes
-from ..utility.grammar_new import all_rot_, has_, mystr_
+from ..bayes_utility.render import all_possible_shapes
+from ..bayes_utility.grammar import all_rot_, has_, mystr_
 
 
 if os.path.exists('/Users/rfeinman'):
     ROOT = '/Users/rfeinman/NYU/PhdThesis/GNS Modeling/' \
            'Structured Visual Concepts/Yanli Stuff/fitted_bayes_model'
-elif os.path.exists('/home/feinman'):
-    ROOT = '/misc/vlgscratch4/LakeGroup/Reuben/SVC/fitted_bayes_model'
+elif os.path.exists('/home/yz1349'):
+    ROOT = '/misc/vlgscratch4/LakeGroup/Yanli/SVC/fitted_bayes_model'
 else:
     raise Exception('root path must be provided.')
-
 
 with open(os.path.join(ROOT, 'token_to_img_dict.pkl'), 'rb') as f:
     token_to_img_dict = pickle.load(f)
 
 
-zoo_old = [['A+0'],
+zoo_exp1 = [['A+0'],
            ['A+0', 'A+0', 'A+0'],
            ['A+0', 'A+90'],
            ['A+0','B+0','C+0'],
@@ -43,7 +42,7 @@ zoo_old = [['A+0'],
            ['AB0+0', 'AB1+0'],
            ['AB0+0', 'AB0+90']]
 
-zoo_types_3 = [['A+0','A+90','A+270'],
+zoo_exp2_3 =  [['A+0','A+90','A+270'],
                ['AB0+0','AB1+90','AB2+270'],
                ['AB0+0','AB0+90','AB0+270'],
                ['AB0+0','AA0+90','AC0+270'],
@@ -54,7 +53,7 @@ zoo_types_3 = [['A+0','A+90','A+270'],
                ['AA0B0+0','AA0C0+270','AA0D0+90'],
                ['AA0C3+0','AA1B3+90','AA2D0+270']]
 
-zoo_types_6 = [['A+0','A+90','A+270','A+90','A+0','A+270'],
+zoo_exp2_6 =  [['A+0','A+90','A+270','A+90','A+0','A+270'],
                ['AB0+0','AB1+90','AB2+270','AB2+0','AB0+90','AB1+0'],
                ['AB0+0','AB0+90','AB0+270','AB0+0','AB0+270','AB0+90'],
                ['AB0+0','AA0+90','AC0+270','AA2+270','AD0+0','AB1+0'],
@@ -65,8 +64,7 @@ zoo_types_6 = [['A+0','A+90','A+270','A+90','A+0','A+270'],
                ['AA0B0+0','AA0C0+270','AA0D0+90','AA0B1+90','AA0C0+0','AA0D0+180'],
                ['AA0C3+0','AA1B3+90','AA2D0+270','AA3D2+90','AA2B1+90','AA0C3+0']]
 
-zoo_types = zoo_types_3 + zoo_types_6 + zoo_old
-
+zoo_types = zoo_exp2_3 + zoo_exp2_6 + zoo_exp1
 PRIMS = ['A', 'B', 'C', 'D']
 
 ALL_TOKEN_STR = set()
@@ -82,13 +80,9 @@ def toindex(tokens):
     return out
 
 
-# valid_f = lambda tk: len("".join(re.split("[^a-zA-Z]*", tk))) in {1,2,3}
-
-
 @functools.lru_cache(maxsize=1024)
 def evaluate_tokens(value):
     return set() if value.count_nodes() > 25 else eval(str(value))
-
 
 @functools.lru_cache(maxsize=1024)
 def get_all_tokens(value, prims):
@@ -272,7 +266,7 @@ class PosteriorPredictive:
                                 likelihood_temperature=lt)
             h.compute_posterior([FunctionData(input=[], output=self.zoo, alpha=1-1e-8)])
             hypotheses.append(h)
-        self.hypotheses = sorted(hypotheses, key=lambda h: -h.posterior_score)
+        self.hypotheses  = sorted(hypotheses, key=lambda h: -h.posterior_score)
         self.log_weights = log_softmax([h.posterior_score for h in self.hypotheses])
         self.N_TOKENS = self.hypotheses[0].N_TOKENS
 
@@ -368,35 +362,10 @@ class PosteriorPredictive:
 
         return loglikelihood
 
-    # def log_prob2(self, samples, alpha=1.0, image=True, lt=1.0):
-    #     token_to_img = token_to_img_dict[self.prims]
-    #     if image:
-    #         token_index = token_to_img
-    #     else:
-    #         token_index = {tkn:i for i,tkn in enumerate(sorted(token_to_img.keys()))}
-    #
-    #     samples = [token_index[tkn] for tkn in samples]
-    #
-    #     num_tokens = len(set(token_index.values()))
-    #     likelihoods = np.zeros((num_tokens, len(self.hypotheses)))
-    #     for j, h in enumerate(self.hypotheses):
-    #         h_tokens = [token_index[tkn] for tkn in h._all_tokens]
-    #         likelihoods[h_tokens, j] = 1
-    #     likelihoods *= alpha / likelihoods.sum(0)
-    #     likelihoods += (1 - alpha) / likelihoods.shape[0]
-    #     log_likelihoods = np.log(likelihoods, out=likelihoods)
-    #     if lt != 1:
-    #         log_likelihoods /= lt
-    #         log_likelihoods -= logsumexp(log_likelihoods, axis=0)
-    #
-    #     scores = log_likelihoods[samples] + self.log_weights  # [samples x hypots]
-    #     scores = logsumexp(scores, axis=1)  # [samples]
-    #
-    #     return np.sum(scores)
 
 
 if __name__ == '__main__':
-    from svc.utility.grammar_new import get_grammar
+    from ..bayes_utility.grammar import get_grammar
 
     topn = 500  # number of top hypotheses to use
 
@@ -416,7 +385,7 @@ if __name__ == '__main__':
     grammar = get_grammar(thetas, n_att=18)
 
     print('loading data...')
-    with open(os.path.join(ROOT, 'trial_data_long.pkl'), 'rb') as f:
+    with open(os.path.join(ROOT, 'trial_data.pkl'), 'rb') as f:
         trial_data = pickle.load(f)
 
     with open(os.path.join(ROOT, 'reweighted_h.pkl'), 'rb') as f:

@@ -3,7 +3,7 @@ import random
 import numpy as np
 import torch
 
-from ...utility2.render import make_image, render_from_string
+from ...gns_utility.render import make_image, render_from_string
 from ..concepts import MetaConcept
 from ..util import decode_part, recenter
 from .fit_angle import fit_angle

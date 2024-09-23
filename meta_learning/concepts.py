@@ -2,9 +2,9 @@ import math
 import random
 import numpy as np
 
-from ..utility.grammar import grammar as base_grammar
-from ..utility.hypothesis import ShapeHypothesis
-from ..utility2.render import render_from_string
+from ..bayes_utility.grammar import grammar as base_grammar
+from ..bayes_utility.hypothesis import ShapeHypothesis
+from ..gns_utility.render import render_from_string
 
 
 def default_getter(token_str, primitives):

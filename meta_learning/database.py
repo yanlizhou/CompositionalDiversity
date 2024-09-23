@@ -3,7 +3,7 @@ A database class for indexing into a discrete set of possible
 tokens (i.e. possible primitive combinations)
 """
 import functools
-from svc.utility.render import all_possible_shapes
+from ..bayes_utility.render import all_possible_shapes
 
 
 class Meta(type):

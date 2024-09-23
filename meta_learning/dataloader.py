@@ -1,6 +1,6 @@
 import torch
 
-from ..utility.grammar import grammar
+from ..bayes_utility.grammar import grammar
 from .concepts import MetaConcept
 
 

@@ -9,9 +9,7 @@ from .render_util import shapes_in_exp
 
 primitives = shapes_in_exp[[1,2,3,4,5,12,14,15,18]]
 
-# NOTE: modified this path so that it doesn't depend on our active
-# script/notebook directory
-#shapes_path = './data/all_possible_shapes.pkl'
+
 shapes_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'all_possible_shapes.pkl')
 with open(shapes_path, 'rb') as f:
     all_possible_shapes = pickle.load(f)
@@ -252,8 +250,6 @@ def str_to_primid(token_str):
         s1 = ord(temp[0])-65
         return (s1,)
 
-
-
 def rotatePoint(centerPoint,point,angle):
     """Rotates a point around another centerPoint. Angle is in degrees.
     Rotation is counter-clockwise"""
@@ -325,11 +321,11 @@ def make_image_from_data(polys, angles, x_shift, y_shift, colors = None, if_draw
 
     return shifted_and_rotated, img
 
-def process_canvas(row):
-    if row['n_example']==3:
-        raw_data = raw_zoo_data_3
-    else:
-        raw_data = raw_zoo_data_6
+def process_canvas(row, raw_data):
+    # if row['n_example']==3:
+    #     raw_data = raw_zoo_data_3
+    # else:
+    #     raw_data = raw_zoo_data_6
     colors = ['#bee37f','#d5a4de','#fcce8d','#a6d4ff']
     row_prim_data = pd.DataFrame(raw_data[str(int(row['seed_id']))]['all_prim_data'][str(int(row['zoo_id']))])
     polys = []

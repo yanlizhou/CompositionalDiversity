@@ -6,8 +6,8 @@ import math
 import numpy as np
 from PIL import Image, ImageDraw
 
-from ..utility.render import get_lines, all_possible_shapes
-from ..utility.render_util import generate_all_attachments, shapes_in_exp
+from ..bayes_utility.render import get_lines, all_possible_shapes
+from ..bayes_utility.render_util import generate_all_attachments, shapes_in_exp
 
 PRIMITIVES = shapes_in_exp[[1, 2, 3, 4, 5, 12, 14, 15, 18]]
 

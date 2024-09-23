@@ -1,6 +1,5 @@
 import numpy as np
-from itertools import combinations, permutations
-from random import shuffle
+from itertools import combinations
 from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 

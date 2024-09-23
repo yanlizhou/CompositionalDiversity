@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import numpy as np
 
-from ...utility2.render import make_image
+from ...gns_utility.render import make_image
 from . import recenter, dictionary, attach_part
 
 
